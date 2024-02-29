@@ -11,7 +11,8 @@ if(dev) {
   # read the r6 object, this is from experiment id VDK_220223_01
   r6_lipid <- readRDS(file.path("tests", "testthat", "test_data", "r6.RDS"))
   class_norm_org <- readRDS(file.path("tests", "testthat", "test_data", "class_norm.RDS"))
-  tot_norm_org <-  readRDS(file.path("tests", "testthat", "test_data", "tot_norm.RDS"))
+  tot_norm_org <- readRDS(file.path("tests", "testthat", "test_data", "tot_norm.RDS"))
+  z_norm_org <- readRDS(file.path("tests", "testthat", "test_data", "z_norm.RDS"))
 
   data_table <- r6_lipid$tables$raw_data
 
@@ -56,5 +57,19 @@ if(dev) {
   )
 
   #### z-score normalisation ####
+  # mean centering and UV scaling
+  data_centered <- t(t(data_table) - colMeans(data_table, na.rm = TRUE))
+  data_z_norm <- t(t(data_centered) / Rfast::colVars(data_table, std = TRUE, na.rm = TRUE))
+
+  # compare the results
+  waldo::compare(
+    data_z_norm,
+    z_norm_org
+  ) # small deviation far behind the comma, all fine
+
+
+
+
+
 
 }
