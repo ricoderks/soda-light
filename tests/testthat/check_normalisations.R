@@ -1,5 +1,7 @@
 # Check the different normalisations:
 # * Class normalisation, total area normalisation per lipid class
+# * Total area normalisation
+# * z-score normalisation
 #
 # Normalisation is done on the raw data table, i.e. the filtered data.
 
@@ -9,10 +11,11 @@ if(dev) {
   # read the r6 object, this is from experiment id VDK_220223_01
   r6_lipid <- readRDS(file.path("tests", "testthat", "test_data", "r6.RDS"))
   class_norm_org <- readRDS(file.path("tests", "testthat", "test_data", "class_norm.RDS"))
+  tot_norm_org <-  readRDS(file.path("tests", "testthat", "test_data", "tot_norm.RDS"))
 
   data_table <- r6_lipid$tables$raw_data
 
-  ## Class normalisation
+  #### Class normalisation ####
   # use the lipid class total to normalise the lipids of each class
   classes <- r6_lipid$tables$feature_table[, "lipid_class"]
   names(classes) <- rownames(r6_lipid$tables$feature_table)
@@ -42,4 +45,16 @@ if(dev) {
     data_class_norm,
     class_norm_org
   )
+
+  #### Total area normalisation ####
+  data_tot_norm <- data_table / rowSums(data_table, na.rm = TRUE)
+
+  # compare the results
+  waldo::compare(
+    data_tot_norm,
+    tot_norm_org
+  )
+
+  #### z-score normalisation ####
+
 }
