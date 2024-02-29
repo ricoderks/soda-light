@@ -1686,6 +1686,7 @@ example_lipidomics = function(name,
   r6$indices$rownames_pools = rownames(r6$tables$imp_meta)[pool_idx]
   r6$indices$rownames_samples = rownames(r6$tables$imp_meta)[sample_idx]
 
+  # filter out the correct meta data based on the sample names
   r6$tables$raw_meta = r6$tables$raw_meta[r6$indices$rownames_samples, ]
 
   # extract the blanks and the qc samples
