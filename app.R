@@ -204,10 +204,9 @@ server = function(input, output, session) {
       # get the batches for the samples belonging to the experiment
       data_files = unique(db_data$batchNumber[db_data$experimentId == query[["experimentId"]]])
       data_files = data_files[!is.na(data_files)]
-
       # Create lipidomics r6 object
       module_controler$r6_exp = example_lipidomics(name = "Lips_1",
-                                                   id = id,
+                                                   id = "mod_exp_1",
                                                    slot = "exp_1",
                                                    experiment_id = experiment_id)
 

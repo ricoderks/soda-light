@@ -10,6 +10,3 @@ Authors@R: c(
            comment = c(ORCID = "0000-0002-6363-0857")))
 Maintainer: Rico Derks <r.j.e.derks@lumc.nl>
 License: GPL (>= 3)
-Suggests: 
-    testthat (>= 3.0.0)
-Config/testthat/edition: 3
