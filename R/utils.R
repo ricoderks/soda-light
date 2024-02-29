@@ -646,8 +646,6 @@ blank_filter = function(data_table, blank_table, blank_multiplier, sample_thresh
   if (saved_cols) {
     del_cols = setdiff(colnames(data_table), del_cols)
   }
-  print("Save removed columns")
-  saveRDS(del_cols, "del_cols.RDS")
   return(del_cols)
 }
 
