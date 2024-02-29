@@ -2,6 +2,7 @@
 # * Class normalisation, total area normalisation per lipid class
 # * Total area normalisation
 # * z-score normalisation
+# * z-score and class normalisation
 #
 # Normalisation is done on the raw data table, i.e. the filtered data.
 
@@ -13,6 +14,7 @@ if(dev) {
   class_norm_org <- readRDS(file.path("tests", "testthat", "test_data", "class_norm.RDS"))
   tot_norm_org <- readRDS(file.path("tests", "testthat", "test_data", "tot_norm.RDS"))
   z_norm_org <- readRDS(file.path("tests", "testthat", "test_data", "z_norm.RDS"))
+  class_z_norm_org <- readRDS(file.path("tests", "testthat", "test_data", "class_z_norm.RDS"))
 
   data_table <- r6_lipid$tables$raw_data
 
@@ -68,7 +70,18 @@ if(dev) {
   ) # small deviation far behind the comma, all fine
 
 
+  #### z-score and class normalisation ####
+  # z-score normalisation applied to the class normalisation
+  # mean centering and UV scaling
+  data_class_norm <- r6_lipid$tables$class_norm_data
+  data_class_norm_centered <- t(t(data_class_norm) - colMeans(data_class_norm, na.rm = TRUE))
+  data_class_z_norm <- t(t(data_class_norm_centered) / Rfast::colVars(data_class_norm, std = TRUE, na.rm = TRUE))
 
+  # compare the results
+  waldo::compare(
+    data_class_z_norm,
+    class_z_norm_org
+  ) # small deviation far behind the comma, all fine
 
 
 
