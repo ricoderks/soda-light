@@ -32,4 +32,5 @@ if(dev) {
     # the order of the column names is different
     class_table_org[, colnames(class_table)]
   )
+   # all fine
 }
