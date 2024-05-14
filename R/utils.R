@@ -693,40 +693,40 @@ lips_get_del_cols = function(data_table,
     return(del_cols)
   }
 
-  # Group filtering
-  saved_cols = c()
-  for (g in unique(raw_meta[, group_col])) {
-    group_idx = which(imp_meta[, group_col] == g)
-    above_threshold = rep(0, length(del_cols))
-    names(above_threshold) = del_cols
-    for (b in unique(imp_meta[group_idx, batch_col])) {
-
-      batch_idx = which(imp_meta[, batch_col] == b)
-      batch_blanks = base::intersect(batch_idx, idx_blanks)
-      batch_samples = base::intersect(batch_idx, group_idx)
-
-      # Get rownames
-      batch_blanks = rownames(imp_meta)[batch_blanks]
-      batch_samples = rownames(imp_meta)[batch_samples]
-      batch_samples = base::intersect(rownames(data_table), batch_samples)
-
-      # get batch blank means
-      blank_means = get_col_means(data_table = blank_table[batch_blanks, ])
-      threshold = blank_multiplier * blank_means
-
-      # Find features / columns below threshold
-      for (col in del_cols) {
-        above_threshold[col] = above_threshold[col] + sum(data_table[batch_samples,col] >= threshold[col], na.rm = T)
-      }
-    }
-    above_threshold = above_threshold / length(group_idx) >= group_threshold
-    saved_cols = c(saved_cols, names(above_threshold)[above_threshold])
-  }
-
-  saved_cols = unique(saved_cols)
-  saved_cols = sort(saved_cols)
-
-  del_cols = setdiff(del_cols, saved_cols)
+  # # Group filtering
+  # saved_cols = c()
+  # for (g in unique(raw_meta[, group_col])) {
+  #   group_idx = which(imp_meta[, group_col] == g)
+  #   above_threshold = rep(0, length(del_cols))
+  #   names(above_threshold) = del_cols
+  #   for (b in unique(imp_meta[group_idx, batch_col])) {
+  #
+  #     batch_idx = which(imp_meta[, batch_col] == b)
+  #     batch_blanks = base::intersect(batch_idx, idx_blanks)
+  #     batch_samples = base::intersect(batch_idx, group_idx)
+  #
+  #     # Get rownames
+  #     batch_blanks = rownames(imp_meta)[batch_blanks]
+  #     batch_samples = rownames(imp_meta)[batch_samples]
+  #     batch_samples = base::intersect(rownames(data_table), batch_samples)
+  #
+  #     # get batch blank means
+  #     blank_means = get_col_means(data_table = blank_table[batch_blanks, ])
+  #     threshold = blank_multiplier * blank_means
+  #
+  #     # Find features / columns below threshold
+  #     for (col in del_cols) {
+  #       above_threshold[col] = above_threshold[col] + sum(data_table[batch_samples,col] >= threshold[col], na.rm = T)
+  #     }
+  #   }
+  #   above_threshold = above_threshold / length(group_idx) >= group_threshold
+  #   saved_cols = c(saved_cols, names(above_threshold)[above_threshold])
+  # }
+  #
+  # saved_cols = unique(saved_cols)
+  # saved_cols = sort(saved_cols)
+  #
+  # del_cols = setdiff(del_cols, saved_cols)
 
   return(del_cols)
 }
