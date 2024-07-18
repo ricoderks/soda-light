@@ -1214,19 +1214,11 @@ Lips_exp = R6::R6Class(
 
       # Get the color palette
       color_count = colors_switch(color_palette)
-      color_palette = RColorBrewer::brewer.pal(color_count, color_palette)
-      print("Rico")
-      print(color_palette)
-      # color_palette <- get_color_palette(group = 1,
-      #                                    color_palette = color_palette,
-      #                                    force_scale = TRUE,
-      #                                    reverse_color_palette = reverse_palette)
-      # if (reverse_palette) {
-      #   # color_palette = base::rev(color_palette)
-      #   color_palette <- get_color_palette(groups = color_count,
-      #                                      color_palette = color_palette,
-      #                                      reverse_color_palette = TRUE)
-      # }
+      color_palette <- get_colors(color_count = color_count,
+                                  color_palette = color_palette)
+      if(reverse_palette) {
+        color_palette <- rev(color_palette)
+      }
 
       # customise the x-axis labels
       # use group name and the last 3 number of the sample name
@@ -1390,12 +1382,14 @@ Lips_exp = R6::R6Class(
       # Store the plot_table
       self$tables$fa_analysis_table <- plot_table
 
-      group_list = sort(unique(plot_table$group))
-      # colors = brewer.pal(as.numeric(colors_switch(color_palette)), color_palette)
-      # colors = colorRampPalette(colors)(length(group_list))
-      # colors = setNames(colors, group_list)
-      colors <- get_color_palette(groups = group_list,
+      # group_list = sort(unique(plot_table$group))
+      colors <- get_color_palette(groups = plot_table$group,
                                   color_palette = color_palette)
+      print("Rico: fa colors")
+      # print(group_list)
+      print(colors)
+      colors <- rev(colors)
+      print(colors)
 
       # set the main title for FA overview per lipid class
       if(selected_view == "lipidclass") {
