@@ -273,7 +273,7 @@ server = function(input, output, session) {
     # simple sanity check
     if (!is.null(query[["experimentId"]])) {
       print_tm(NULL, paste("experimentId from URL:", query[["experimentId"]]))
-      if(!grepl(pattern = "NLA_[0-9]{3}", #"^.{3}_2[1-9][0-9]{4}_[0-9]{2}$",
+      if(!grepl(pattern = "NLA_[0-9]{3}[a-z]?", #"^.{3}_2[1-9][0-9]{4}_[0-9]{2}$",
                 x = query[["experimentId"]])) {
         query[["experimentId"]] <- "NLA_900"
       }
