@@ -272,11 +272,11 @@ server = function(input, output, session) {
     query <- shiny::parseQueryString(client_data$url_search)
     # simple sanity check
     if (!is.null(query[["experimentId"]])) {
-      print_tm(NULL, paste("experimentId from URL:", query[["experimentId"]]))
-      if(!grepl(pattern = "NLA_[0-9]{3}[a-z]?", #"^.{3}_2[1-9][0-9]{4}_[0-9]{2}$",
+      if(!grepl(pattern = "NLA_[0-9]{3}[a-z]?",
                 x = query[["experimentId"]])) {
-        query[["experimentId"]] <- query[["experimentId"]]
+        query[["experimentId"]] <- "NLA_900"
       }
+      print_tm(NULL, paste("experimentId from URL:", query[["experimentId"]]))
     } else {
       # for easy development
       query[["experimentId"]] <- "NLA_900" # "VDK_220223_01"
