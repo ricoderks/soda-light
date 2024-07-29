@@ -98,7 +98,7 @@ header_ui = function() {
   name = toupper(trimws(name))
 
   # Extract version
-  version = gsub("[^0-9.-]", "", desc[3,1])
+  version = sub("Version: ", "", desc[3,1])
   header = paste(name, "|", version, sep = " ")
   # bs4Dash::dashboardHeader(title = header)
   bs4Dash::dashboardHeader(
@@ -127,7 +127,7 @@ footer_ui = function() {
   name = toupper(trimws(name))
 
   # Extract version
-  version = gsub("[^0-9.-]", "", desc[3,1])
+  version = gsub("Version: ", "", desc[3,1])
   header = paste(name, "|", version, sep = " ")
   bs4Dash::dashboardFooter(left = header)
 }
