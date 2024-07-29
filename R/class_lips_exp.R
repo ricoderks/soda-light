@@ -139,20 +139,21 @@ Lips_exp = R6::R6Class(
       # plot specific
       class_distribution = list(
         datasets = list(
-          # "Lipid classes (absolute conc.)" = "Class table",
+          "Lipid classes (absolute conc.)" = "Class table",
           "Lipid classes (normalized, % of total lipid classes)" = "Class table total normalized"
         )
       ),
 
       class_comparison = list(
         datasets = list(
-          # "Lipid classes (absolute conc.)" = "Class table",
+          "Lipid classes (absolute conc.)" = "Class table",
           "Lipid classes (normalized, % of total lipid classes)" = "Class table total normalized"
         )
       ),
 
       volcano_plot = list(
         datasets = list(
+          "Lipid classes (absolute conc.)" = "Class table",
           "Lipid species (normalized, % of total lipids within class)" = "Class normalized table",
           "Lipid species (normalized, % of total lipids)" = "Total normalized table"
         ),
@@ -189,10 +190,10 @@ Lips_exp = R6::R6Class(
 
       heatmap = list(
         datasets = list(
-          # "Lipid species (z-scores)" = "Z-scored table",
+          "Lipid species (z-scores)" = "Z-scored table",
           "Lipid species (z-scores, normalized, % of total lipids)" = "Z-scored total normalized table",
           "Lipid species (z-scores, normalized, % of total lipids within class)" = "Z-scored class normalized table",
-          # "Lipid classes (z-scores)" = "Class table z-scored",
+          "Lipid classes (z-scores)" = "Class table z-scored",
           "Lipid classes (z-scores, normalized, % of total lipids)" = "Class table z-scored total normalized"
         ),
         map_cols = list(
@@ -223,7 +224,7 @@ Lips_exp = R6::R6Class(
       # ),
       pca = list(
         datasets = list(
-          # "Lipid species (z-scores)" = "Z-scored table",
+          "Lipid species (z-scores)" = "Z-scored table",
           "Lipid species (z-scores), (normalized, % of total lipids)" = "Z-scored total normalized table"
         ),
         feature_metadata = list(
@@ -849,7 +850,6 @@ Lips_exp = R6::R6Class(
                                                    idx_group_2 = idx_group_2,
                                                    used_function = used_function,
                                                    impute_inf = FALSE)
-
 
       volcano_table$p_val = get_p_val(data_table = data_table,
                                       idx_group_1 = idx_group_1,
