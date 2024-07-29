@@ -891,7 +891,7 @@ Lips_exp = R6::R6Class(
       for (c in class_list) {
         for (g in group_list){
           s = rownames(meta_table)[meta_table[,group_col] == g]
-          m = mean(as.matrix(table[s, c]), na.rm = TRUE)
+          m = mean(as.matrix(table[s[!is.na(s)], c]), na.rm = TRUE)
           plot_table[c, g] = m
         }
       }
@@ -996,7 +996,7 @@ Lips_exp = R6::R6Class(
 
           # For each class, each group
           s = rownames(meta_table)[meta_table[, group_col] == g] # Get the samples for the current group
-          d = data_table[s, c] # Get the concentrations for all s samples in the current class c
+          d = data_table[s[!is.na(s)], c] # Get the concentrations for all s samples in the current class c
           m = mean(d, na.rm = TRUE) # Get the mean concentration for samples s for class c
 
           # Subplot for the bar chart displaying the mean concentration
@@ -1012,7 +1012,7 @@ Lips_exp = R6::R6Class(
                               line = list(color = 'rgb(100,100,100)'),
                               marker = list(color = 'rgb(100,100,100)'), alpha = 1,
                               legendgroup=i, showlegend = FALSE,
-                              text = s,
+                              text = s[!is.na(s)],
                               hoverinfo = "text")
 
           # add the title to the plot
@@ -1385,11 +1385,8 @@ Lips_exp = R6::R6Class(
       # group_list = sort(unique(plot_table$group))
       colors <- get_color_palette(groups = plot_table$group,
                                   color_palette = color_palette)
-      print("Rico: fa colors")
       # print(group_list)
-      print(colors)
       colors <- rev(colors)
-      print(colors)
 
       # set the main title for FA overview per lipid class
       if(selected_view == "lipidclass") {

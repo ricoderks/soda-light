@@ -2473,7 +2473,7 @@ fa_comp_hm_calc.fa <- function(data_table = NULL,
                                selected_lipidclass = NULL) {
   ## samples
   idx_samples <- rownames(sample_meta)[sample_meta[, group_col] == selected_group]
-  hm_data <- data_table[idx_samples, , drop = FALSE]
+  hm_data <- data_table[idx_samples[!is.na(idx_samples)], , drop = FALSE]
 
   ## features
   feature_table$lipid <- rownames(feature_table)
@@ -2560,7 +2560,7 @@ fa_comp_hm_calc.total <- function(data_table = NULL,
                                   selected_lipidclass = NULL) {
   ## samples
   idx_samples <- rownames(sample_meta)[sample_meta[, group_col] == selected_group]
-  hm_data <- data_table[idx_samples, , drop = FALSE]
+  hm_data <- data_table[idx_samples[!is.na(idx_samples)], , drop = FALSE]
 
   ## features
   feature_table$lipid <- rownames(feature_table)
