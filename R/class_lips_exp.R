@@ -139,20 +139,21 @@ Lips_exp = R6::R6Class(
       # plot specific
       class_distribution = list(
         datasets = list(
-          # "Lipid classes (absolute conc.)" = "Class table",
+          "Lipid classes (absolute conc.)" = "Class table",
           "Lipid classes (normalized, % of total lipid classes)" = "Class table total normalized"
         )
       ),
 
       class_comparison = list(
         datasets = list(
-          # "Lipid classes (absolute conc.)" = "Class table",
+          "Lipid classes (absolute conc.)" = "Class table",
           "Lipid classes (normalized, % of total lipid classes)" = "Class table total normalized"
         )
       ),
 
       volcano_plot = list(
         datasets = list(
+          "Lipid classes (absolute conc.)" = "Class table",
           "Lipid species (normalized, % of total lipids within class)" = "Class normalized table",
           "Lipid species (normalized, % of total lipids)" = "Total normalized table"
         ),
@@ -189,10 +190,10 @@ Lips_exp = R6::R6Class(
 
       heatmap = list(
         datasets = list(
-          # "Lipid species (z-scores)" = "Z-scored table",
+          "Lipid species (z-scores)" = "Z-scored table",
           "Lipid species (z-scores, normalized, % of total lipids)" = "Z-scored total normalized table",
           "Lipid species (z-scores, normalized, % of total lipids within class)" = "Z-scored class normalized table",
-          # "Lipid classes (z-scores)" = "Class table z-scored",
+          "Lipid classes (z-scores)" = "Class table z-scored",
           "Lipid classes (z-scores, normalized, % of total lipids)" = "Class table z-scored total normalized"
         ),
         map_cols = list(
@@ -223,7 +224,7 @@ Lips_exp = R6::R6Class(
       # ),
       pca = list(
         datasets = list(
-          # "Lipid species (z-scores)" = "Z-scored table",
+          "Lipid species (z-scores)" = "Z-scored table",
           "Lipid species (z-scores), (normalized, % of total lipids)" = "Z-scored total normalized table"
         ),
         feature_metadata = list(
@@ -850,7 +851,6 @@ Lips_exp = R6::R6Class(
                                                    used_function = used_function,
                                                    impute_inf = FALSE)
 
-
       volcano_table$p_val = get_p_val(data_table = data_table,
                                       idx_group_1 = idx_group_1,
                                       idx_group_2 = idx_group_2,
@@ -891,7 +891,7 @@ Lips_exp = R6::R6Class(
       for (c in class_list) {
         for (g in group_list){
           s = rownames(meta_table)[meta_table[,group_col] == g]
-          m = mean(as.matrix(table[s, c]), na.rm = TRUE)
+          m = mean(as.matrix(table[s[!is.na(s)], c]), na.rm = TRUE)
           plot_table[c, g] = m
         }
       }
@@ -996,7 +996,7 @@ Lips_exp = R6::R6Class(
 
           # For each class, each group
           s = rownames(meta_table)[meta_table[, group_col] == g] # Get the samples for the current group
-          d = data_table[s, c] # Get the concentrations for all s samples in the current class c
+          d = data_table[s[!is.na(s)], c] # Get the concentrations for all s samples in the current class c
           m = mean(d, na.rm = TRUE) # Get the mean concentration for samples s for class c
 
           # Subplot for the bar chart displaying the mean concentration
@@ -1012,7 +1012,7 @@ Lips_exp = R6::R6Class(
                               line = list(color = 'rgb(100,100,100)'),
                               marker = list(color = 'rgb(100,100,100)'), alpha = 1,
                               legendgroup=i, showlegend = FALSE,
-                              text = s,
+                              text = s[!is.na(s)],
                               hoverinfo = "text")
 
           # add the title to the plot
@@ -1385,11 +1385,8 @@ Lips_exp = R6::R6Class(
       # group_list = sort(unique(plot_table$group))
       colors <- get_color_palette(groups = plot_table$group,
                                   color_palette = color_palette)
-      print("Rico: fa colors")
       # print(group_list)
-      print(colors)
       colors <- rev(colors)
-      print(colors)
 
       # set the main title for FA overview per lipid class
       if(selected_view == "lipidclass") {

@@ -831,39 +831,40 @@ lips_get_del_cols = function(data_table,
     return(del_cols)
   }
 
-  # Group filtering
-  saved_cols = c()
-  for (g in unique(raw_meta[, group_col])) {
-    group_idx = which(imp_meta[, group_col] == g)
-    above_threshold = rep(0, length(del_cols))
-    names(above_threshold) = del_cols
-    for (b in unique(imp_meta[group_idx, batch_col])) {
-      batch_idx = which(imp_meta[, batch_col] == b)
-      batch_blanks = base::intersect(batch_idx, idx_blanks)
-      batch_samples = base::intersect(batch_idx, group_idx)
-
-      # Get rownames
-      batch_blanks = rownames(imp_meta)[batch_blanks]
-      batch_samples = rownames(imp_meta)[batch_samples]
-      batch_samples = base::intersect(rownames(data_table), batch_samples)
-
-      # get batch blank means
-      blank_means = get_col_means(data_table = blank_table[batch_blanks, ])
-      threshold = blank_multiplier * blank_means
-
-      # Find features / columns below threshold
-      for (col in del_cols) {
-        above_threshold[col] = above_threshold[col] + sum(data_table[batch_samples, col] >= threshold[col], na.rm = T)
-      }
-    }
-    above_threshold = above_threshold / length(group_idx) >= group_threshold
-    saved_cols = c(saved_cols, names(above_threshold)[above_threshold])
-  }
-
-  saved_cols = unique(saved_cols)
-  saved_cols = sort(saved_cols)
-
-  del_cols = setdiff(del_cols, saved_cols)
+  # # Group filtering
+  # saved_cols = c()
+  # for (g in unique(raw_meta[, group_col])) {
+  #   group_idx = which(imp_meta[, group_col] == g)
+  #   above_threshold = rep(0, length(del_cols))
+  #   names(above_threshold) = del_cols
+  #   for (b in unique(imp_meta[group_idx, batch_col])) {
+  #
+  #     batch_idx = which(imp_meta[, batch_col] == b)
+  #     batch_blanks = base::intersect(batch_idx, idx_blanks)
+  #     batch_samples = base::intersect(batch_idx, group_idx)
+  #
+  #     # Get rownames
+  #     batch_blanks = rownames(imp_meta)[batch_blanks]
+  #     batch_samples = rownames(imp_meta)[batch_samples]
+  #     batch_samples = base::intersect(rownames(data_table), batch_samples)
+  #
+  #     # get batch blank means
+  #     blank_means = get_col_means(data_table = blank_table[batch_blanks, ])
+  #     threshold = blank_multiplier * blank_means
+  #
+  #     # Find features / columns below threshold
+  #     for (col in del_cols) {
+  #       above_threshold[col] = above_threshold[col] + sum(data_table[batch_samples,col] >= threshold[col], na.rm = T)
+  #     }
+  #   }
+  #   above_threshold = above_threshold / length(group_idx) >= group_threshold
+  #   saved_cols = c(saved_cols, names(above_threshold)[above_threshold])
+  # }
+  #
+  # saved_cols = unique(saved_cols)
+  # saved_cols = sort(saved_cols)
+  #
+  # del_cols = setdiff(del_cols, saved_cols)
 
   return(del_cols)
 }
@@ -1190,7 +1191,7 @@ get_p_val = function(data_table, idx_group_1, idx_group_2, used_function, impute
       } else if(sum(!is.na(x)) < 2 | sum(!is.na(y)) < 2) {
         # if the groups doesn't contain enough data
         return(NA)
-      } else if(all(x == mean(x, na.rm = T)) & all(y == mean(y, na.rm = T))) {
+      } else if(all(x == mean(x, na.rm = T), na.rm = TRUE) & all(y == mean(y, na.rm = T), na.rm = TRUE)) {
         return(1)
       } else {
         return(stats::wilcox.test(x, y)$p.value)
@@ -1198,7 +1199,6 @@ get_p_val = function(data_table, idx_group_1, idx_group_2, used_function, impute
     }
   } else if (used_function == "t-Test") {
     test_function = function(x, y){
-
       # if(all(x == mean(x, na.rm = T)) & all(y == mean(y, na.rm = T))) {
       #   return(1)
       # } else
@@ -1216,7 +1216,7 @@ get_p_val = function(data_table, idx_group_1, idx_group_2, used_function, impute
       } else if(sum(!is.na(x)) < 2 | sum(!is.na(y)) < 2) {
         # if one of the groups doesn't contain enough data
         return(NA)
-      } else if(all(x == mean(x, na.rm = T)) & all(y == mean(y, na.rm = T))) {
+      } else if(all(x == mean(x, na.rm = T), na.rm = TRUE) & all(y == mean(y, na.rm = T), na.rm = TRUE)) {
         # if both groups contain constant data
         return(1)
       } else {
@@ -2472,7 +2472,7 @@ fa_comp_hm_calc.fa <- function(data_table = NULL,
                                selected_lipidclass = NULL) {
   ## samples
   idx_samples <- rownames(sample_meta)[sample_meta[, group_col] == selected_group]
-  hm_data <- data_table[idx_samples, , drop = FALSE]
+  hm_data <- data_table[idx_samples[!is.na(idx_samples)], , drop = FALSE]
 
   ## features
   feature_table$lipid <- rownames(feature_table)
@@ -2559,7 +2559,7 @@ fa_comp_hm_calc.total <- function(data_table = NULL,
                                   selected_lipidclass = NULL) {
   ## samples
   idx_samples <- rownames(sample_meta)[sample_meta[, group_col] == selected_group]
-  hm_data <- data_table[idx_samples, , drop = FALSE]
+  hm_data <- data_table[idx_samples[!is.na(idx_samples)], , drop = FALSE]
 
   ## features
   feature_table$lipid <- rownames(feature_table)

@@ -98,7 +98,7 @@ header_ui = function() {
   name = toupper(trimws(name))
 
   # Extract version
-  version = gsub("[^0-9.-]", "", desc[3,1])
+  version = sub("Version: ", "", desc[3,1])
   header = paste(name, "|", version, sep = " ")
   # bs4Dash::dashboardHeader(title = header)
   bs4Dash::dashboardHeader(
@@ -127,7 +127,7 @@ footer_ui = function() {
   name = toupper(trimws(name))
 
   # Extract version
-  version = gsub("[^0-9.-]", "", desc[3,1])
+  version = gsub("Version: ", "", desc[3,1])
   header = paste(name, "|", version, sep = " ")
   bs4Dash::dashboardFooter(left = header)
 }
@@ -272,14 +272,14 @@ server = function(input, output, session) {
     query <- shiny::parseQueryString(client_data$url_search)
     # simple sanity check
     if (!is.null(query[["experimentId"]])) {
-      print_tm(NULL, paste("experimentId from URL:", query[["experimentId"]]))
-      if(!grepl(pattern = "NLA_[0-9]{3}", #"^.{3}_2[1-9][0-9]{4}_[0-9]{2}$",
+      if(!grepl(pattern = "NLA_[0-9]{3}[a-z]?",
                 x = query[["experimentId"]])) {
-        query[["experimentId"]] <- "NLA_888"
+        query[["experimentId"]] <- "NLA_900"
       }
+      print_tm(NULL, paste("experimentId from URL:", query[["experimentId"]]))
     } else {
       # for easy development
-      query[["experimentId"]] <- "NLA_888" # "VDK_220223_01"
+      query[["experimentId"]] <- "NLA_900" # "VDK_220223_01"
     }
     experiment_id = query[["experimentId"]]
 
