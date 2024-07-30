@@ -245,6 +245,11 @@ Lips_exp = R6::R6Class(
         )
       ),
       fa_composition = list(
+        datasets = list(
+          "Lipid species (absolute conc.)" = "Raw data table",
+          "Lipid species (normalized, % of total lipids within class)" = "Class normalized table",
+          "Lipid species (normalized, % of total lipids)" = "Total normalized table"
+        ),
         composition_options = list(
           "Fatty acid tail" = "fa_tail",
           "Total lipid" = "total_lipid"
@@ -321,7 +326,8 @@ Lips_exp = R6::R6Class(
       pca_loadings_table = NULL,
       dbplot_table = NULL,
       satindex_table = NULL,
-      fa_analysis_table = NULL
+      fa_analysis_table = NULL,
+      fa_comp_table = NULL
     ),
 
     #-------------------------------------------------------------- Local table
@@ -783,7 +789,7 @@ Lips_exp = R6::R6Class(
                                   img_format = "png")
 
       self$param_fa_comp_plot(
-        data_table = self$tables$total_norm_data,
+        data_table = 'Total normalized table',
         sample_meta = self$tables$raw_meta,
         composition = self$params$fa_comp_plot$composition,
         feature_meta = self$tables$feature_table,
@@ -1328,7 +1334,7 @@ Lips_exp = R6::R6Class(
                                 color_palette = self$params$fa_analysis_plot$color_palette,
                                 width = NULL,
                                 height = NULL) {
-      data_table = self$table_check_convert(data_table)
+      data_table <- self$table_check_convert(data_table)
 
       # do the calculations
       if(selected_view == "lipidclass") {
@@ -1453,7 +1459,7 @@ Lips_exp = R6::R6Class(
     },
 
     # plot Fatty acid composition heatmaps
-    plot_fa_comp = function(data_table = self$tables$total_norm_data,
+    plot_fa_comp = function(data_table = self$params$fa_comp_plot$data_table,
                             sample_meta = self$tables$raw_meta,
                             composition = self$params$fa_comp_plot$composition,
                             feature_table = self$tables$feature_table,
@@ -1464,6 +1470,7 @@ Lips_exp = R6::R6Class(
                             color_palette = self$params$fa_comp_plot$color_palette,
                             width = NULL,
                             height = NULL) {
+      data_table <- self$table_check_convert(data_table)
       # Get the color palette
       # color_count = colors_switch(color_palette)
       # color_palette = RColorBrewer::brewer.pal(color_count, color_palette)

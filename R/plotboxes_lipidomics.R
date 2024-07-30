@@ -1867,6 +1867,12 @@ fa_comp_server = function(r6, input, output, session) {
   output$fa_comp_sidebar_ui = shiny::renderUI({
     shiny::tagList(
       shiny::selectInput(
+        inputId = ns("fa_comp_dataset"),
+        label = "Select table",
+        choices = r6$hardcoded_settings$fa_composition$datasets,
+        selected = r6$params$fa_comp_plot$data_table
+      ),
+      shiny::selectInput(
         inputId = ns("fa_comp_composition"),
         label = "Select composition",
         choices = r6$hardcoded_settings$fa_composition$composition_options,
@@ -1918,12 +1924,18 @@ fa_comp_server = function(r6, input, output, session) {
 
 fa_comp_events = function(r6, dimensions_obj, color_palette, input, output, session) {
   iv_fa_comp <- shinyvalidate::InputValidator$new()
+  iv_fa_comp$add_rule("fa_comp_dataset", shinyvalidate::sv_required())
   iv_fa_comp$add_rule("fa_comp_composition", shinyvalidate::sv_required())
   iv_fa_comp$add_rule("fa_comp_metacol", shinyvalidate::sv_required())
   iv_fa_comp$add_rule("fa_comp_metagroup", shinyvalidate::sv_required())
   iv_fa_comp$add_rule("fa_comp_selected_lipidclass", shinyvalidate::sv_required())
   iv_fa_comp$add_rule("fa_comp_color_palette", shinyvalidate::sv_required())
   iv_fa_comp$add_rule("fa_comp_img_format", shinyvalidate::sv_required())
+  iv_fa_comp$add_rule("fa_comp_dataset",
+                      iv_check_select_input,
+                      choices = r6$hardcoded_settings$fa_composition$datasets,
+                      name_plot = r6$name,
+                      message = "FA composition: Incorrect data set selected!")
   iv_fa_comp$add_rule("fa_comp_composition",
                       iv_check_select_input,
                       choices = r6$hardcoded_settings$fa_composition$composition_options,
@@ -2002,6 +2014,7 @@ fa_comp_events = function(r6, dimensions_obj, color_palette, input, output, sess
   # Generate the plot
   shiny::observeEvent(
     c(shiny::req(length(input$fa_comp_metagroup) == 2),
+      input$fa_comp_dataset,
       input$fa_comp_composition,
       input$fa_comp_selected_lipidclass,
       input$fa_comp_color_palette,
@@ -2018,7 +2031,7 @@ fa_comp_events = function(r6, dimensions_obj, color_palette, input, output, sess
           print_tm(r6$name, "Fatty acid composition analysis: Updating params...")
 
           r6$param_fa_comp_plot(
-            data_table = r6$tables$total_norm_data,
+            data_table = input$fa_comp_dataset,
             sample_meta = r6$tables$raw_meta,
             composition = input$fa_comp_composition,
             feature_meta = r6$tables$feature_table,
