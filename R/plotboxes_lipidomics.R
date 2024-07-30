@@ -824,6 +824,12 @@ fa_analysis_server = function(r6, input, output, session) {
   output$fa_analysis_sidebar_ui = shiny::renderUI({
     shiny::tagList(
       shiny::selectInput(
+        inputId = ns("fa_analysis_dataset"),
+        label = "Select table",
+        choices = r6$hardcoded_settings$fa_analysis$datasets,
+        selected = r6$params$fa_analysis_plot$data_table
+      ),
+      shiny::selectInput(
         inputId = ns("fa_analysis_metacol"),
         label = "Select group column",
         choices = r6$hardcoded_settings$meta_column,
@@ -922,12 +928,18 @@ fa_analysis_events = function(r6, dimensions_obj, color_palette, input, output, 
   fa_tails <- sort(fa_tails[fa_tails != "0:0"])
 
   iv_fa_analysis <- shinyvalidate::InputValidator$new()
+  iv_fa_analysis$add_rule("fa_analysis_dataset", shinyvalidate::sv_required())
   iv_fa_analysis$add_rule("fa_analysis_metacol", shinyvalidate::sv_required())
   iv_fa_analysis$add_rule("fa_analysis_selected_view", shinyvalidate::sv_required())
   iv_fa_analysis$add_rule("fa_analysis_selected_lipidclass", shinyvalidate::sv_optional())
   iv_fa_analysis$add_rule("fa_analysis_selected_fa", shinyvalidate::sv_optional())
   iv_fa_analysis$add_rule("fa_analysis_color_palette", shinyvalidate::sv_required())
   iv_fa_analysis$add_rule("fa_analysis_img_format", shinyvalidate::sv_required())
+  iv_fa_analysis$add_rule("fa_analysis_dataset",
+                          iv_check_select_input,
+                          choices = r6$hardcoded_settings$fa_analysis$datasets,
+                          name_plot = r6$name,
+                          message = "FA analysis: Incorrect data set selected!")
   iv_fa_analysis$add_rule("fa_analysis_metacol",
                           iv_check_select_input,
                           choices = r6$hardcoded_settings$meta_column,
@@ -960,7 +972,8 @@ fa_analysis_events = function(r6, dimensions_obj, color_palette, input, output, 
                           message = "FA analysis: Incorrect image format selected!")
 
   # Generate the plot
-  shiny::observeEvent(c(input$fa_analysis_metacol,
+  shiny::observeEvent(c(input$fa_analysis_dataset,
+                        input$fa_analysis_metacol,
                         input$fa_analysis_selected_view,
                         input$fa_analysis_selected_lipidclass,
                         input$fa_analysis_selected_fa,
@@ -982,7 +995,7 @@ fa_analysis_events = function(r6, dimensions_obj, color_palette, input, output, 
 
                             print_tm(r6$name, "Fatty acid analysis: Updating params...")
 
-                            r6$param_fa_analysis_plot(data_table = r6$tables$total_norm_data,
+                            r6$param_fa_analysis_plot(data_table = input$fa_analysis_dataset,
                                                       feature_meta = r6$tables$feature_table,
                                                       sample_meta = r6$tables$raw_meta,
                                                       group_col = input$fa_analysis_metacol,

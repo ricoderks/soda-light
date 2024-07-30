@@ -153,7 +153,7 @@ Lips_exp = R6::R6Class(
 
       volcano_plot = list(
         datasets = list(
-          "Lipid classes (absolute conc.)" = "Class table",
+          "Lipid species (absolute conc.)" = "Raw data table",
           "Lipid species (normalized, % of total lipids within class)" = "Class normalized table",
           "Lipid species (normalized, % of total lipids)" = "Total normalized table"
         ),
@@ -206,22 +206,6 @@ Lips_exp = R6::R6Class(
           "Total number of double bonds" = "unsat_sum"
         )
       ),
-      # samples_correlation = list(
-      #   datasets = list(
-      #     "Raw data table",
-      #     "Total normalized table",
-      #     'Z-scored table',
-      #     'Z-scored total normalized table'
-      #   )
-      # ),
-      # feature_correlation = list(
-      #   datasets = list(
-      #     "Raw data table",
-      #     "Total normalized table",
-      #     'Z-scored table',
-      #     'Z-scored total normalized table'
-      #   )
-      # ),
       pca = list(
         datasets = list(
           "Lipid species (z-scores)" = "Z-scored table",
@@ -254,6 +238,11 @@ Lips_exp = R6::R6Class(
         )
       ),
       fa_analysis = list(
+        datasets = list(
+          "Lipid species (absolute conc.)" = "Raw data table",
+          "Lipid species (normalized, % of total lipids within class)" = "Class normalized table",
+          "Lipid species (normalized, % of total lipids)" = "Total normalized table"
+        )
       ),
       fa_composition = list(
         composition_options = list(
@@ -782,7 +771,7 @@ Lips_exp = R6::R6Class(
                      colors_palette = 'Set1',
                      img_format = "png")
 
-      self$param_fa_analysis_plot(data_table = self$tables$total_norm_data,
+      self$param_fa_analysis_plot(data_table = 'Total normalized table',
                                   feature_meta = self$tables$feature_table,
                                   sample_meta = self$tables$raw_meta,
                                   group_col = self$indices$group_col,
@@ -1328,7 +1317,7 @@ Lips_exp = R6::R6Class(
     },
 
     ## FA analysis
-    plot_fa_analysis = function(data_table = self$tables$total_norm_data,
+    plot_fa_analysis = function(data_table = self$params$fa_analysis_plot$data_table,
                                 feature_table = self$tables$feature_table,
                                 sample_meta = self$tables$raw_meta,
                                 group_col = self$params$fa_analysis_plot$group_col,
@@ -1339,7 +1328,8 @@ Lips_exp = R6::R6Class(
                                 color_palette = self$params$fa_analysis_plot$color_palette,
                                 width = NULL,
                                 height = NULL) {
-      ## At the moment this function is using the raw data table
+      data_table = self$table_check_convert(data_table)
+
       # do the calculations
       if(selected_view == "lipidclass") {
         res <- fa_analysis_calc(data_table = data_table,
