@@ -486,7 +486,7 @@ get_plotly_box = function(id, label, dimensions_obj, session) {
     width = dimensions_obj$xbs,
     height = dimensions_obj$ypx * dimensions_obj$y_box,
     solidHeader = TRUE,
-    maximizable = TRUE,
+    maximizable = FALSE,
     collapsible = FALSE,
     status = "info",
     sidebar = bs4Dash::boxSidebar(
@@ -496,7 +496,7 @@ get_plotly_box = function(id, label, dimensions_obj, session) {
         outputId = ns(paste0(id, "_sidebar_ui"))
       )
     ),
-    shiny::textOutput(outputId = ns(paste0(id, "_message"))),
+    shiny::uiOutput(outputId = ns(paste0(id, "_message"))),
     plotly::plotlyOutput(
       outputId = ns(paste0(id, "_plot")),
       width = dimensions_obj$xpx * dimensions_obj$x_plot,
@@ -2318,7 +2318,7 @@ fa_analysis_calc <- function(data_table = NULL,
 
   ## Data
   # select the correct data
-  sel_data_table <- data_table[, sel_feat_idx]
+  sel_data_table <- data_table[, sel_feat_idx, drop = FALSE]
 
   # get the unique chain lengths and unsaturation
   uniq_carbon <- sort(union(unique(sel_feature_table$carbons_1[sel_feature_table$lipid_class != "TG"]),
