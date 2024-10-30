@@ -635,6 +635,10 @@ Lips_exp = R6::R6Class(
         tmp_cells <- self$tables$imp_data[rownames(self$tables$imp_data) %in% id_cells, ]
         tmp_plasma <- self$tables$imp_data[rownames(self$tables$imp_data) %in% id_plasma, ]
 
+        print("Rico")
+        print(tmp_cells$ID)
+        print(id_cells)
+
         # fix QC naming
         if(nrow(tmp_cells) > 0) {
           tmp_cells$ID <- id_cells
