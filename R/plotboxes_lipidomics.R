@@ -1912,6 +1912,13 @@ fa_comp_server = function(r6, input, output, session) {
         choices = r6$hardcoded_settings$image_format,
         selected = r6$params$fa_comp_plot$img_format,
         width = "100%"),
+      shiny::selectInput(
+        inputId = ns("fa_comp_select_table"),
+        label = "Select table for download",
+        choices = c("Left heatmap" = "left", "Right heatmap" = "right"),
+        selected = "Left heatmap",
+        multiple = FALSE
+      ),
       shiny::downloadButton(
         outputId = ns("download_fa_comp_table"),
         label = "Download associated table",
@@ -2053,9 +2060,16 @@ fa_comp_events = function(r6, dimensions_obj, color_palette, input, output, sess
 
   # Download associated table
   output$download_fa_comp_table = shiny::downloadHandler(
-    filename = function(){timestamped_name("fa_composition_table.csv")},
+    filename = function() {
+      timestamped_name(paste0("fa_composition_", input$fa_comp_select_table, "_table.csv"))
+    },
     content = function(file_name){
-      write.csv(r6$tables$fa_comp_table, file_name)
+      switch(
+        input$fa_comp_select_table,
+        "left" = write.csv(r6$tables$fa_comp_left_table, file_name),
+        "right" = write.csv(r6$tables$fa_comp_right_table, file_name)
+      )
+
     }
   )
 
