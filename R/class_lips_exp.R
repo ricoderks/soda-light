@@ -332,7 +332,9 @@ Lips_exp = R6::R6Class(
       pca_loadings_table = NULL,
       dbplot_table = NULL,
       satindex_table = NULL,
-      fa_analysis_table = NULL
+      fa_analysis_table = NULL,
+      fa_comp_left_table = NULL,
+      fa_comp_right_table = NULL
     ),
 
     #-------------------------------------------------------------- Local table
@@ -1527,61 +1529,61 @@ Lips_exp = R6::R6Class(
 
       ## left side
       # heatmap
-      hm_left_data <- fa_comp_hm_calc(data_table = data_table,
-                                      sample_meta = sample_meta,
-                                      composition = composition,
-                                      feature_table = feature_table,
-                                      group_col = group_col,
-                                      selected_group = group_1,
-                                      selected_lipidclass = selected_lipidclass)
+      self$tables$fa_comp_left_table <- fa_comp_hm_calc(data_table = data_table,
+                                                        sample_meta = sample_meta,
+                                                        composition = composition,
+                                                        feature_table = feature_table,
+                                                        group_col = group_col,
+                                                        selected_group = group_1,
+                                                        selected_lipidclass = selected_lipidclass)
       # bar left top
-      bar_top_left_data <- data.frame(x = factor(colnames(hm_left_data),
-                                                 levels = sort(as.numeric(colnames(hm_left_data))),
-                                                 labels = sort(as.numeric(colnames(hm_left_data)))),
-                                      y = colSums(hm_left_data))
+      bar_top_left_data <- data.frame(x = factor(colnames(self$tables$fa_comp_left_table),
+                                                 levels = sort(as.numeric(colnames(self$tables$fa_comp_left_table))),
+                                                 labels = sort(as.numeric(colnames(self$tables$fa_comp_left_table)))),
+                                      y = colSums(self$tables$fa_comp_left_table))
       avg_carbon_left <- weighted.mean(x = as.numeric(as.character(bar_top_left_data$x)),
                                        w = bar_top_left_data$y)
       # bar left
-      bar_left_data <- data.frame(x = factor(rownames(hm_left_data),
-                                             levels = sort(as.numeric(rownames(hm_left_data)), decreasing = TRUE),
-                                             labels = sort(as.numeric(rownames(hm_left_data)), decreasing = TRUE)),
-                                  y = rowSums(hm_left_data))
+      bar_left_data <- data.frame(x = factor(rownames(self$tables$fa_comp_left_table),
+                                             levels = sort(as.numeric(rownames(self$tables$fa_comp_left_table)), decreasing = TRUE),
+                                             labels = sort(as.numeric(rownames(self$tables$fa_comp_left_table)), decreasing = TRUE)),
+                                  y = rowSums(self$tables$fa_comp_left_table))
       avg_unsat_left <- weighted.mean(x = as.numeric(as.character(bar_left_data$x)),
                                       w = bar_left_data$y)
 
 
       ## right side
       # heatmap
-      hm_right_data <- fa_comp_hm_calc(data_table = data_table,
-                                       sample_meta = sample_meta,
-                                       composition = composition,
-                                       feature_table = feature_table,
-                                       group_col = group_col,
-                                       selected_group = group_2,
-                                       selected_lipidclass = selected_lipidclass)
+      self$tables$fa_comp_right_table <- fa_comp_hm_calc(data_table = data_table,
+                                                         sample_meta = sample_meta,
+                                                         composition = composition,
+                                                         feature_table = feature_table,
+                                                         group_col = group_col,
+                                                         selected_group = group_2,
+                                                         selected_lipidclass = selected_lipidclass)
       # bar right top
-      bar_top_right_data <- data.frame(x = factor(colnames(hm_right_data),
-                                                  levels = sort(as.numeric(colnames(hm_right_data))),
-                                                  labels = sort(as.numeric(colnames(hm_right_data)))),
-                                       y = colSums(hm_right_data))
+      bar_top_right_data <- data.frame(x = factor(colnames(self$tables$fa_comp_right_table),
+                                                  levels = sort(as.numeric(colnames(self$tables$fa_comp_right_table))),
+                                                  labels = sort(as.numeric(colnames(self$tables$fa_comp_right_table)))),
+                                       y = colSums(self$tables$fa_comp_right_table))
       avg_carbon_right <- weighted.mean(x = as.numeric(as.character(bar_top_right_data$x)),
                                         w = bar_top_right_data$y)
       # bar right
-      bar_right_data <- data.frame(x = factor(rownames(hm_right_data),
-                                              levels = sort(as.numeric(rownames(hm_right_data)), decreasing = TRUE),
-                                              labels = sort(as.numeric(rownames(hm_right_data)), decreasing = TRUE)),
-                                   y = rowSums(hm_right_data))
+      bar_right_data <- data.frame(x = factor(rownames(self$tables$fa_comp_right_table),
+                                              levels = sort(as.numeric(rownames(self$tables$fa_comp_right_table)), decreasing = TRUE),
+                                              labels = sort(as.numeric(rownames(self$tables$fa_comp_right_table)), decreasing = TRUE)),
+                                   y = rowSums(self$tables$fa_comp_right_table))
       avg_unsat_right <- weighted.mean(x = as.numeric(as.character(bar_right_data$x)),
                                        w = bar_right_data$y)
 
 
       # get the min and max value for the heatmap colorbar
-      min_value <- min(c(min(hm_left_data), min(hm_right_data)))
-      max_value <- max(c(max(hm_left_data), max(hm_right_data)))
+      min_value <- min(c(min(self$tables$fa_comp_left_table), min(self$tables$fa_comp_right_table)))
+      max_value <- max(c(max(self$tables$fa_comp_left_table), max(self$tables$fa_comp_right_table)))
 
       ## plots
       # left side
-      fig_hm_left <- fa_comp_heatmap(data = hm_left_data,
+      fig_hm_left <- fa_comp_heatmap(data = self$tables$fa_comp_left_table,
                                      vline = avg_carbon_left,
                                      hline = avg_unsat_left,
                                      composition = composition,
@@ -1645,7 +1647,7 @@ Lips_exp = R6::R6Class(
         )
 
       # right side
-      fig_hm_right <- fa_comp_heatmap(data = hm_right_data,
+      fig_hm_right <- fa_comp_heatmap(data = self$tables$fa_comp_right_table,
                                       vline = avg_carbon_right,
                                       hline = avg_unsat_right,
                                       composition = composition,
