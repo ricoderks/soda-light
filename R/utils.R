@@ -3004,8 +3004,13 @@ example_lipidomics = function(name,
     idx_meta <- apply(r6$tables$raw_meta[, r6$hardcoded_settings$meta_column], 2, function(x) {
       length(unique(x)) >= 2
     })
-
-    r6$hardcoded_settings$meta_column <- r6$hardcoded_settings$meta_column[idx_meta]
+    # If there is no grouping in the data
+    if(!any(idx_meta)) {
+      r6$hardcoded_settings$meta_column <- unique(meta_data$defaultColumn)[1]
+    } else {
+      r6$hardcoded_settings$meta_column <- r6$hardcoded_settings$meta_column[idx_meta]
+    }
+    print( r6$hardcoded_settings$meta_column)
   } else {
     print("error")
     r6 <- Lips_exp$new(name = "Error",
