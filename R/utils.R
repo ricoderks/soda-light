@@ -717,6 +717,14 @@ get_lipid_classes = function(feature_list, uniques = TRUE){
              split = " ",
              fixed = TRUE)[[1]][1])
   classes = as.vector(classes)
+
+  # pix the P-PE and O-PE classes
+  classes <- ifelse(classes %in% "PE",
+                    gsub(x = feature_list,
+                         pattern = "PE ([OP])?(-)?.*",
+                         replacement = "PE\\2\\1"),
+                    classes)
+
   if (uniques) {
     return(unique(classes))}
   else{
