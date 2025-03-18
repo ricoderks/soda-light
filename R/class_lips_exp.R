@@ -892,6 +892,20 @@ Lips_exp = R6::R6Class(
       rownames(plot_table) = class_list
       colnames(plot_table) = group_list
 
+      # export all data for lian = table
+      # add group information
+      # export_table <- merge(
+      #   x = meta_table[, group_col, drop = FALSE],
+      #   y = as.data.frame(table),
+      #   by = 0
+      # )
+      # colnames(export_table)[1:2] <- c("sampleName", "group")
+      # write.csv(x = export_table,
+      #           file = "/home/rjederks/Downloads/lian_20250318.csv",
+      #           row.names = FALSE)
+
+
+
       for (c in class_list) {
         for (g in group_list){
           s = rownames(meta_table)[meta_table[,group_col] == g]
