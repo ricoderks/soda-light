@@ -14,7 +14,6 @@ library(ggplot2)
 library(gridExtra)
 library(plotly)
 library(heatmaply)
-library(ComplexHeatmap)
 library(ggpubr)
 library(ggupset)
 library(ellipse)
@@ -282,13 +281,13 @@ server = function(input, output, session) {
     # simple sanity check
     if (!is.null(query[["experimentId"]])) {
       print_tm(NULL, paste("experimentId from URL:", query[["experimentId"]]))
-      if(!grepl(pattern = "NLA_[0-9]{3}", #"^.{3}_2[1-9][0-9]{4}_[0-9]{2}$",
+      if(!grepl(pattern = "NLA_[0-9]{3}",
                 x = query[["experimentId"]])) {
         query[["experimentId"]] <- "NLA_888"
       }
     } else {
       # for easy development
-      query[["experimentId"]] <- "NLA_888" # "VDK_220223_01"
+      query[["experimentId"]] <- "NLA_888"
     }
     experiment_id = query[["experimentId"]]
 
