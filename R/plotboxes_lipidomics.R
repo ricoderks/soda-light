@@ -945,6 +945,11 @@ fa_analysis_server = function(r6, input, output, session) {
         outputId = ns("download_fa_analysis_table"),
         label = "Download associated table",
         style = "width:100%;"
+      ),
+      shiny::downloadButton(
+        outputId = ns("download_fa_analysis_all_table"),
+        label = "Download associated table (samples)",
+        style = "width:100%;"
       )
     )
   })
@@ -1088,6 +1093,14 @@ fa_analysis_events = function(r6, dimensions_obj, color_palette, input, output, 
     filename = function(){timestamped_name("fa_analysis_table.csv")},
     content = function(file_name){
       write.csv(r6$tables$fa_analysis_table, file_name)
+    }
+  )
+
+  # Download associated table all samples
+  output$download_fa_analysis_all_table = shiny::downloadHandler(
+    filename = function(){timestamped_name("fa_analysis_table_all_samples.csv")},
+    content = function(file_name){
+      write.csv(r6$tables$fa_analysis_all_table, file_name)
     }
   )
 

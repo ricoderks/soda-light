@@ -336,6 +336,7 @@ Lips_exp = R6::R6Class(
       dbplot_table = NULL,
       satindex_table = NULL,
       fa_analysis_table = NULL,
+      fa_analysis_all_table = NULL,
       fa_comp_right_hm = NULL,
       fa_comp_right_top_bar = NULL,
       fa_comp_right_bar = NULL,
@@ -1457,6 +1458,14 @@ Lips_exp = R6::R6Class(
                                     selected_fa = selected_fa,
                                     fa_norm = fa_norm)
       }
+
+      export_table <- merge(
+        x = sample_meta[, group_col, drop = FALSE],
+        y = as.data.frame(res),
+        by = 0
+      )
+      colnames(export_table)[1:2] <- c("sampleName", "group")
+      self$tables$fa_analysis_all_table <- export_table
 
       # Produce the class x group table
       # add ID's, group's and make long
